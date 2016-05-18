@@ -1,0 +1,5 @@
+<CREOLE-DIRECTORY>
+  <JAR SCAN="true">lib/gate-cloud-plugin-1.0-SNAPSHOT.jar</JAR>
+  <JAR>lib/gate-cloud-client-1.0-SNAPSHOT.jar</JAR>
+  <JAR>lib/FastInfoset-1.2.13.jar</JAR>
+</CREOLE-DIRECTORY>
