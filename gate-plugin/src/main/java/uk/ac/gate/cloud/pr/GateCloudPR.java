@@ -285,10 +285,17 @@ public class GateCloudPR extends AbstractLanguageAnalyser {
   }
 
   protected String mappedASName(String name) {
-    if(annotationSetMapping != null && annotationSetMapping.containsKey(name)) {
-      return (String)annotationSetMapping.get(name);
-    } else {
-      return name;
+    if(annotationSetMapping != null) {
+      if(annotationSetMapping.containsKey(name)) {
+        return (String)annotationSetMapping.get(name);
+      } else if(name == null && annotationSetMapping.containsKey("")) {
+        // special case - if we were asked for null and there's a mapping
+        // for "", use that
+        return (String)annotationSetMapping.get("");
+      }
     }
+    
+    // no mapping, or not found in mapping
+    return name;
   }
 }
