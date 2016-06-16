@@ -7,6 +7,7 @@ Documentation can be found on [the wiki][2]:
 - [Client library usage guide][3] 
 - [Client library JavaDocs][4]
 - [Command line tool usage guide][5]
+- [GATE plugin][6]
 
 
 
@@ -15,3 +16,4 @@ Documentation can be found on [the wiki][2]:
   [3]: https://github.com/GateNLP/cloud-client/wiki/Client-Library-Usage-Guide
   [4]: http://gatenlp.github.io/cloud-client/javadoc/
   [5]: https://github.com/GateNLP/cloud-client/wiki/Command-Line-Tool-Usage-Guide
+  [6]: https://github.com/GateNLP/cloud-client/wiki/Gate-Plugin
