@@ -1,10 +1,10 @@
 <CREOLE-DIRECTORY
   ID="uk.ac.gate.cloud.GateCloudClient"
-  VERSION="1.0-SNAPSHOT"
+  VERSION="1.0"
   DESCRIPTION="Call the GATE Cloud API from a GATE pipeline"
   HELPURL="https://github.com/GateNLP/cloud-client/wiki/Gate-Plugin"
 >
-  <JAR SCAN="true">lib/gate-cloud-plugin-1.0-SNAPSHOT.jar</JAR>
-  <JAR>lib/gate-cloud-client-1.0-SNAPSHOT.jar</JAR>
+  <JAR SCAN="true">lib/gate-cloud-plugin-1.0.jar</JAR>
+  <JAR>lib/gate-cloud-client-1.0.jar</JAR>
   <JAR>lib/FastInfoset-1.2.13.jar</JAR>
 </CREOLE-DIRECTORY>
