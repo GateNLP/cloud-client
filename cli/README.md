@@ -1,8 +1,8 @@
-AnnoMarket.com command line tool
-================================
+GATE Cloud command line tool
+============================
 
-[Command line tool][1] for the [AnnoMarket.com REST API][2].
+[Command line tool][1] for the [GATE Cloud REST API][2].
 
 
-  [1]: https://github.com/annomarket/java-client/wiki/CommandLine
-  [2]: https://annomarket.com/info/help/rest-api.html
+  [1]: https://github.com/GateNLP/cloud-client/wiki/Command-Line-Tool-Usage-Guide
+  [2]: https://cloud.gate.ac.uk/info/help/rest-api.html
