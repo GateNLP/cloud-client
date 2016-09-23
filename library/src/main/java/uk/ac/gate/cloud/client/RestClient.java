@@ -421,9 +421,9 @@ public class RestClient {
     try {
       String encoding = connection.getContentEncoding();
       if("gzip".equalsIgnoreCase(encoding)) {
-        stream = new GZIPInputStream(connection.getInputStream());
+        stream = new GZIPInputStream(connection.getErrorStream());
       } else {
-        stream = connection.getInputStream();
+        stream = connection.getErrorStream();
       }
 
       InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
