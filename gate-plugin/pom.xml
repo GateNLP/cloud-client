@@ -4,25 +4,32 @@
 
   <parent>
     <groupId>uk.ac.gate</groupId>
-    <artifactId>cloud-client-parent</artifactId>
-    <version>1.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <artifactId>gate-plugin-base</artifactId>
+    <version>8.5-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
+  <groupId>uk.ac.gate</groupId>
   <artifactId>gate-cloud-plugin</artifactId>
+  <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>GATE plugin containing a PR to call the GATE Cloud API</name>
   <url>https://cloud.gate.ac.uk</url>
 
-  <dependencies>
-    <dependency>
-      <groupId>uk.ac.gate</groupId>
-      <artifactId>gate-core</artifactId>
-      <version>8.2</version>
-      <scope>provided</scope>
-    </dependency>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
+  <organization>
+    <name>GATE</name>
+    <url>http://gate.ac.uk</url>
+  </organization>
+
+  <dependencies>
     <dependency>
       <groupId>uk.ac.gate</groupId>
       <artifactId>gate-cloud-client</artifactId>
@@ -53,30 +60,5 @@
       <version>1.2.13</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <descriptors>
-            <descriptor>src/assembly/assembly.xml</descriptor>
-          </descriptors>
-          <finalName>gate-cloud</finalName>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>
