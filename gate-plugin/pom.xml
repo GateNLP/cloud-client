@@ -13,7 +13,8 @@
   <artifactId>gate-cloud-plugin</artifactId>
   <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>GATE plugin containing a PR to call the GATE Cloud API</name>
+  <name>GATE Cloud Client</name>
+  <description>GATE plugin containing a PR to call the GATE Cloud API</description>
   <url>https://cloud.gate.ac.uk</url>
 
   <licenses>
