@@ -5,17 +5,26 @@
   <parent>
     <groupId>uk.ac.gate</groupId>
     <artifactId>gate-plugin-base</artifactId>
-    <version>8.5-SNAPSHOT</version>
+    <version>8.5</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>uk.ac.gate</groupId>
+  <groupId>uk.ac.gate.plugins</groupId>
   <artifactId>gate-cloud-plugin</artifactId>
   <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
+
   <name>GATE Cloud Client</name>
   <description>GATE plugin containing a PR to call the GATE Cloud API</description>
   <url>https://cloud.gate.ac.uk</url>
+
+  <developers>
+    <developer>
+      <id>gate-team</id>
+      <name>GATE Team</name>
+      <email>gate-developers@lists.sourceforge.net</email>
+    </developer>
+  </developers>
 
   <licenses>
     <license>
@@ -29,6 +38,12 @@
     <name>GATE</name>
     <url>http://gate.ac.uk</url>
   </organization>
+
+  <scm>
+    <connection>scm:git:git://github.com/GateNLP/cloud-client.git</connection>
+    <developerConnection>scm:git:git@github.com:GateNLP/cloud-client.git</developerConnection>
+    <url>https://github.com/GateNLP/cloud-client</url>
+  </scm>
 
   <dependencies>
     <dependency>
