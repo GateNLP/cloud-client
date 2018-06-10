@@ -6,7 +6,7 @@
   <groupId>uk.ac.gate</groupId>
   <artifactId>cloud-client-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
 
   <name>GATE Cloud parent POM</name>
   <description>Parent POM for GATE Cloud client library components</description>
