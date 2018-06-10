@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.io.output.CloseShieldOutputStream;
+
 import uk.ac.gate.cloud.client.StreamWritable;
 
 /**
@@ -36,10 +38,11 @@ public class TextWritable implements StreamWritable {
 
   @Override
   public void writeTo(OutputStream out) throws IOException {
-    OutputStreamWriter w = new OutputStreamWriter(out, "UTF-8");
-    w.write(str);
-    w.flush();
-    // DO NOT CLOSE w, as this would close the underlying stream.
+    // don't close the output stream after writing
+    try(CloseShieldOutputStream csos = new CloseShieldOutputStream(out);
+        OutputStreamWriter w = new OutputStreamWriter(csos, "UTF-8")) {
+      w.write(str);
+    }
   }
 
 }
