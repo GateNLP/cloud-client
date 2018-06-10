@@ -14,6 +14,6 @@ Documentation can be found on [the wiki][2]:
   [1]: https://cloud.gate.ac.uk/info/help/rest-api.html
   [2]: https://github.com/GateNLP/cloud-client/wiki
   [3]: https://github.com/GateNLP/cloud-client/wiki/Client-Library-Usage-Guide
-  [4]: http://gatenlp.github.io/cloud-client/javadoc/
+  [4]: https://javadoc.io/doc/uk.ac.gate/gate-cloud-client
   [5]: https://github.com/GateNLP/cloud-client/wiki/Command-Line-Tool-Usage-Guide
   [6]: https://github.com/GateNLP/cloud-client/wiki/Gate-Plugin
