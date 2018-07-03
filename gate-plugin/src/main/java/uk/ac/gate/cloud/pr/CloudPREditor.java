@@ -11,6 +11,7 @@ import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.GuiType;
 import gate.event.CreoleEvent;
 import gate.event.CreoleListener;
+import gate.gui.SerialControllerEditor;
 import gate.util.GateException;
 
 import java.awt.BorderLayout;
@@ -172,7 +173,7 @@ public class CloudPREditor extends AbstractVisualResource {
   }
 
   private void metadataUpdated() {
-    clearControllerEditorSelections();
+    SerialControllerEditor.clearAllSelections();
     // clear out existing components
     selectorsPanel.removeAll();
     
@@ -244,28 +245,6 @@ public class CloudPREditor extends AbstractVisualResource {
     
     refreshState();
   }
-
-  /**
-   * This is a horrible hack - if this VR's target PR is selected in a
-   * controller editor then any changes we make to the runtime parameter
-   * values will be overwritten when switching back to that controller
-   * editor VR. To prevent this, we need to tell the editor to deselect
-   * the PR whose parameters it is editing before we make any changes
-   * ourselves. Since SerialControllerEditor rebuilds its list views
-   * whenever it notices that a new PR has been added, we fake that
-   * event using this VR's target PR.
-   */
-  private void clearControllerEditorSelections() {
-    List<VisualResource> controllerEditors =
-            Gate.getCreoleRegister().getVrInstances(
-                    "gate.gui.SerialControllerEditor");
-    if(controllerEditors != null) {
-      for(Resource editor : controllerEditors) {
-        ((CreoleListener)editor).resourceLoaded(new CreoleEvent(pr,
-                CreoleEvent.RESOURCE_LOADED));
-      }
-    }
-  }
   
   /**
    * Pull the current parameter values from the PR and update our views.
@@ -302,7 +281,7 @@ public class CloudPREditor extends AbstractVisualResource {
       if("".equals(selectors)) {
         selectors = null;
       }
-      clearControllerEditorSelections();
+      SerialControllerEditor.clearAllSelections();
       pr.setAnnotationSelectors(selectors);
     }
   };
