@@ -8,7 +8,7 @@
     <version>8.6-SNAPSHOT</version>
   </parent>
   <properties>
-    <gate-core.version>8.6-SNAPSHOT</gate-core.version>
+    <gate-core.version>8.5</gate-core.version>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
