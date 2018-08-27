@@ -7,6 +7,9 @@
     <artifactId>gate-plugin-base</artifactId>
     <version>8.6-SNAPSHOT</version>
   </parent>
+  <properties>
+    <gate-core.version>8.6-SNAPSHOT</gate-core.version>
+  </properties>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>uk.ac.gate.plugins</groupId>
