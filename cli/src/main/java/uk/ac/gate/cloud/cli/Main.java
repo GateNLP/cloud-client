@@ -153,14 +153,14 @@ public class Main {
     }
 
     String keyId =
-            System.getProperty("annomarket.apiKey.id",
+            System.getProperty("gate.cloud.apiKey.id",
                     config.getProperty("keyId"));
     String password =
-            System.getProperty("annomarket.apiKey.password",
+            System.getProperty("gate.cloud.apiKey.password",
                     config.getProperty("password"));
     String baseUrl =
             System.getProperty(
-                    "annomarket.baseUrl",
+                    "gate.cloud.baseUrl",
                     config.getProperty("baseUrl",
                             RestClient.DEFAULT_BASE_URL.toString()));
 
