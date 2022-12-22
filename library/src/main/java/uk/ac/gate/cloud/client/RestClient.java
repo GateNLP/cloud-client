@@ -217,7 +217,7 @@ public class RestClient {
         String location = connection.getHeaderField("Location");
         // consume body
         InputStream stream = connection.getInputStream();
-        IOUtils.copy(stream, new NullOutputStream());
+        IOUtils.copy(stream, NullOutputStream.NULL_OUTPUT_STREAM);
         IOUtils.closeQuietly(stream);
         // follow the redirect
         return requestForStream(location, method, requestBody, gzipThreshold,
@@ -376,7 +376,7 @@ public class RestClient {
         // authentication work properly.
         String location = connection.getHeaderField("Location");
         // consume body
-        IOUtils.copy(stream, new NullOutputStream());
+        IOUtils.copy(stream, NullOutputStream.NULL_OUTPUT_STREAM);
         IOUtils.closeQuietly(stream);
         // follow the redirect
         return get(location, responseType);
