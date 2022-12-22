@@ -97,7 +97,8 @@ public class Main {
     System.out.println();
     System.out.println("This client requires an API Key to authenticate to the GATE Cloud");
     System.out.println("APIs.  You can generate one from your account settings page on");
-    System.out.println("https://cloud.gate.ac.uk");
+    System.out.println("https://cloud.gate.ac.uk - ensure you enable the appropriate");
+    System.out.println("permissions for the API actions you intend to call.");
     System.out.println();
     String apiKeyId = console.readLine("API key id: ");
     char[] password = console.readPassword("API key password: ");
