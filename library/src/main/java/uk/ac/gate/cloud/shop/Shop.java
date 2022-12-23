@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * Main entry point to the "shop" API to browse the available pipelines
- * or request a specific pipeline by ID.
+ * and servrs or request a specific item by ID.
  * 
  * @author Ian Roberts
  */
@@ -57,7 +57,7 @@ public class Shop {
 
   /**
    * List the available "items", i.e. pipelines available for use as
-   * annotation jobs.
+   * annotation jobs or cloud machines that can be reserved.
    * 
    * @param tags tags to filter the list - only items with all the
    *          specified tags will be returned

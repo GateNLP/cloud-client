@@ -49,7 +49,7 @@ public class Item extends ApiObject {
   public String shortDescription;
 
   /**
-   * The URL to query for further details, or to POST to reserve a job.
+   * The URL to query for further details, or to POST to reserve a job/machine.
    */
   public String detailUrl;
 
@@ -59,16 +59,19 @@ public class Item extends ApiObject {
   public Prices price;
 
   /**
-   * URL to process documents using the online API.
+   * URL to process documents using the online API, if this
+   * item represents a pipeline.
    */
   public String onlineUrl;
 
   /**
-   * Reserve a number of annotation jobs based on this pipeline.
+   * Reserve a number of annotation jobs based on this pipeline, or
+   * machines of this type, depending on the kind of item.
    * 
-   * @param quantity the number of jobs to reserve
+   * @param quantity the number of jobs/machines to reserve
    * @param allowPayment permit payment if the item has an upfront cost.
-   * @return one {@link Job} object per reserved job.
+   * @return one {@link Job} object per reserved job - the list will be
+   * empty if the item represents a cloud machine rather than a pipeline.
    */
   public List<Job> reserve(int quantity, boolean allowPayment) {
     String[] extraHeaders =
@@ -90,21 +93,25 @@ public class Item extends ApiObject {
   }
 
   /**
-   * Reserve a number of annotation jobs based on this pipeline. If the
+   * Reserve a number of annotation jobs based on this pipeline, or
+   * machines of this type, depending on the kind of item.  If the
    * item has an upfront cost this call will fail.
    * 
-   * @param quantity the number of jobs to reserve
-   * @return one {@link Job} object per reserved job.
+   * @param quantity the number of jobs/machines to reserve
+   * @return one {@link Job} object per reserved job - the list will be
+   * empty if the item represents a cloud machine rather than a pipeline.
    */
   public List<Job> reserve(int quantity) {
     return reserve(quantity, false);
   }
 
   /**
-   * Reserve one annotation job based on this pipeline.
+   * Reserve one annotation job based on this pipeline, or
+   * machine of this type, depending on the kind of item.
    * 
    * @param allowPayment permit payment if the item has an upfront cost.
-   * @return The reserved {@link Job}.
+   * @return The reserved {@link Job}, or <code>null</code> if the item
+   * represents a cloud machine rather than a pipeline.
    */
   public Job reserve(boolean allowPayment) {
     List<Job> jobs = reserve(1, allowPayment);
@@ -116,10 +123,12 @@ public class Item extends ApiObject {
   }
 
   /**
-   * Reserve one job based on this pipeline. If the item has an upfront
-   * cost this call will fail.
+   * Reserve one annotation job based on this pipeline, or
+   * machine of this type, depending on the kind of item. If
+   * the item has an upfront cost this call will fail.
    * 
-   * @return the reserved {@link Job}
+   * @return the reserved {@link Job}, or <code>null</code> if
+   * the item represents a cloud machine rather than a pipeline.
    */
   public Job reserve() {
     return reserve(false);
@@ -151,5 +160,8 @@ public class Item extends ApiObject {
     public String status;
 
     public List<String> jobs;
+
+    @SuppressWarnings("unused")
+    public int machineCount;
   }
 }
