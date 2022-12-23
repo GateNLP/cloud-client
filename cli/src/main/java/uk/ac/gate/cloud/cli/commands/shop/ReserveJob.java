@@ -16,12 +16,14 @@
  */
 package uk.ac.gate.cloud.cli.commands.shop;
 
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import uk.ac.gate.cloud.cli.commands.AbstractCommand;
 import uk.ac.gate.cloud.client.RestClient;
 
+import uk.ac.gate.cloud.client.RestClientException;
 import uk.ac.gate.cloud.job.Job;
 import uk.ac.gate.cloud.shop.Item;
 import uk.ac.gate.cloud.shop.Shop;
@@ -52,15 +54,35 @@ public class ReserveJob extends AbstractCommand {
     } else {
       i = shop.getItem(url);
     }
-    Job job = i.reserve(Boolean.getBoolean("annomarket.payment.allowed"));
-    System.out.println("Successfully reserved job.");
-    // rename if a name was specified
-    if(args.length >= 2) {
-      job.rename(args[1]);
+    try {
+      Job job = i.reserve(Boolean.getBoolean("gate.cloud.payment.allowed") ||
+              ("true".equalsIgnoreCase(System.getenv("GATE_CLOUD_PAYMENT_ALLOWED"))));
+      if(job != null) {
+        System.out.println("Successfully reserved job.");
+        // rename if a name was specified
+        if(args.length >= 2) {
+          job.rename(args[1]);
+        }
+        System.out.println();
+        System.out.println("  ID: " + job.id);
+        System.out.println("Name: " + job.name);
+      } else {
+        System.out.println("Successfully reserved item.");
+        System.out.println();
+        System.out.println("If you have just reserved a cloud machine then it should");
+        System.out.println("appear shortly in your dashboard and the list-machines");
+        System.out.println("command.");
+      }
+    } catch(RestClientException e) {
+      if(e.getResponseCode() == HttpURLConnection.HTTP_PAYMENT_REQUIRED) {
+        System.err.println("This item has an up-front cost - if you are willing to pay");
+        System.err.println("this cost then run the request again setting the system");
+        System.err.println("property gate.cloud.payment.allowed=true or the environment");
+        System.err.println("variable GATE_CLOUD_PAYMENT_ALLOWED=true");
+      } else {
+        throw e;
+      }
     }
-    System.out.println();
-    System.out.println("  ID: " + job.id);
-    System.out.println("Name: " + job.name);
   }
 
 }
