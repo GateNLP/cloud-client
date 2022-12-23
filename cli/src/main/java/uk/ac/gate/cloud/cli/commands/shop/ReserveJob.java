@@ -33,6 +33,7 @@ public class ReserveJob extends AbstractCommand {
   public void run(RestClient client, String... args) throws Exception {
     if(args.length < 1) {
       System.err.println("Usage: reserve-job <itemid or URL> [\"Job name\"]");
+      System.err.println("       reserve-machine <itemid or URL>");
       System.exit(1);
     }
     long itemId = -1;
