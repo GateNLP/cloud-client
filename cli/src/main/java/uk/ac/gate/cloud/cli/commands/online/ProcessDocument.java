@@ -37,7 +37,8 @@ public class ProcessDocument extends AbstractCommand {
   @Override
   public void run(RestClient client, String... args) throws Exception {
     if(args.length < 1) {
-      usage();
+      showHelp();
+      System.exit(1);
     }
     OnlineApiManager mgr = new OnlineApiManager(client);
     ApiEndpoint endpoint = mgr.getEndpoint(args[0]);
@@ -63,7 +64,8 @@ public class ProcessDocument extends AbstractCommand {
           responseType = ResponseType.valueOf(args[++i]);
         } catch(IllegalArgumentException e) {
           System.err.println("Unrecognised response type.");
-          usage();
+          showHelp();
+          System.exit(1);
         }
       } else if("-includeText".equals(args[i])) {
         includeText = !"no".equals(args[++i]);
@@ -72,7 +74,8 @@ public class ProcessDocument extends AbstractCommand {
       } else if("-showQuota".equals(args[i])) {
         showQuotaInfo = true;
       } else {
-        usage();
+        showHelp();
+        System.exit(1);
       }
     }
     
@@ -109,7 +112,8 @@ public class ProcessDocument extends AbstractCommand {
     }
   }
 
-  private void usage() {
+  @Override
+  public void showHelp() throws Exception {
     System.err.println("Usage: process-document <endpoint> [options]");
     System.err.println();
     System.err.println("Available options:");
@@ -138,7 +142,5 @@ public class ProcessDocument extends AbstractCommand {
     System.err.println("              own means all annotation from the default set).");
     System.err.println("              If omitted the pipeline's default selectors will be used.");
     System.err.println("  -showQuota: write quota information to standard error.");
-    
-    System.exit(1);
   }
 }
