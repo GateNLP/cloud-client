@@ -30,6 +30,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 
@@ -47,6 +48,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Ian Roberts
  * 
  */
+@JsonIgnoreType
 public class RestClient {
 
   private final ObjectMapper MAPPER = new ObjectMapper().disable(
