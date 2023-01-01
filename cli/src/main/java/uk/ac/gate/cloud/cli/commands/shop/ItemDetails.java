@@ -24,9 +24,9 @@ import uk.ac.gate.cloud.shop.Shop;
 
 public class ItemDetails extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: item-details <itemid>");
+      showHelp();
       System.exit(1);
     }
     long itemId = -1;
@@ -38,7 +38,11 @@ public class ItemDetails extends AbstractCommand {
     }
     Shop shop = new Shop(client);
     Item i = shop.getItem(itemId);
-    renderItem(i);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, i);
+    } else {
+      renderItem(i);
+    }
   }
 
   private void renderItem(Item i) {
@@ -52,7 +56,14 @@ public class ItemDetails extends AbstractCommand {
     System.out.println();
     System.out.println(i.shortDescription);
   }
-  
-  
 
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  item-details <itemid>");
+    System.err.println();
+    System.err.println("Display details of the item with the specified ID, which");
+    System.err.println("must be an integer as returned by list-items.");
+  }
 }

@@ -30,10 +30,9 @@ import uk.ac.gate.cloud.shop.Shop;
 
 public class ReserveJob extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: reserve-job <itemid or URL> [\"Job name\"]");
-      System.err.println("       reserve-machine <itemid or URL>");
+      showHelp();
       System.exit(1);
     }
     long itemId = -1;
@@ -59,20 +58,30 @@ public class ReserveJob extends AbstractCommand {
       Job job = i.reserve(Boolean.getBoolean("gate.cloud.payment.allowed") ||
               ("true".equalsIgnoreCase(System.getenv("GATE_CLOUD_PAYMENT_ALLOWED"))));
       if(job != null) {
-        System.out.println("Successfully reserved job.");
+        if(!jsonOutput) {
+          System.out.println("Successfully reserved job.");
+        }
         // rename if a name was specified
         if(args.length >= 2) {
           job.rename(args[1]);
         }
-        System.out.println();
-        System.out.println("  ID: " + job.id);
-        System.out.println("Name: " + job.name);
+        if(jsonOutput) {
+          mapper.writeValue(System.out, job);
+        } else {
+          System.out.println();
+          System.out.println("  ID: " + job.id);
+          System.out.println("Name: " + job.name);
+        }
       } else {
-        System.out.println("Successfully reserved item.");
-        System.out.println();
-        System.out.println("If you have just reserved a cloud machine then it should");
-        System.out.println("appear shortly in your dashboard and the list-machines");
-        System.out.println("command.");
+        if(jsonOutput) {
+          System.out.println("{\"message\":\"Success\"}");
+        } else {
+          System.out.println("Successfully reserved item.");
+          System.out.println();
+          System.out.println("If you have just reserved a cloud machine then it should");
+          System.out.println("appear shortly in your dashboard and the list-machines");
+          System.out.println("command.");
+        }
       }
     } catch(RestClientException e) {
       if(e.getResponseCode() == HttpURLConnection.HTTP_PAYMENT_REQUIRED) {
@@ -86,4 +95,16 @@ public class ReserveJob extends AbstractCommand {
     }
   }
 
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  reserve-job <itemid or URL> [\"Job name\"]");
+    System.err.println("  reserve-machine <itemid or URL>");
+    System.err.println();
+    System.err.println("Reserve the job or machine for a given item ID (or");
+    System.err.println("\"detailUrl\" from a previous API call).  If the item");
+    System.err.println("represents a job you may optionally provide a name to");
+    System.err.println("which the job will be renamed after reserving.");
+  }
 }

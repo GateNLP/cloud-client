@@ -21,6 +21,8 @@ import java.util.Currency;
 import java.util.Formatter;
 import java.util.Locale;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import uk.ac.gate.cloud.cli.Command;
 
 import uk.ac.gate.cloud.client.RestClient;
@@ -30,17 +32,24 @@ public abstract class AbstractCommand implements Command {
 
   protected NumberFormat currencyFormatter;
   protected NumberFormat percentFormatter;
+  protected ObjectMapper mapper;
 
   public AbstractCommand() {
     currencyFormatter = NumberFormat.getCurrencyInstance();
     currencyFormatter.setCurrency(Currency.getInstance("GBP"));
     percentFormatter = NumberFormat.getPercentInstance();
     percentFormatter.setMaximumFractionDigits(2);
+    mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
   }
 
   @Override
   public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     run(client, args);
+  }
+
+  @Override
+  public void run(RestClient client, String... args) throws Exception {
+    throw new UnsupportedOperationException();
   }
 
   public String formatPrices(Prices p) {
