@@ -23,9 +23,9 @@ import uk.ac.gate.cloud.machine.MachineManager;
 
 public class RenameMachine extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 2) {
-      System.err.println("Usage: rename-machine <machineid> \"New name\"");
+      showHelp();
       System.exit(1);
     }
     long machineId = -1;
@@ -39,7 +39,19 @@ public class RenameMachine extends AbstractCommand {
     MachineManager mgr = new MachineManager(client);
     Machine m = mgr.getMachine(machineId);
     m.rename(args[1]);
-    System.out.println("Machine renamed successfully");
+    if(jsonOutput) {
+      mapper.writeValue(System.out, m);
+    } else {
+      System.out.println("Machine renamed successfully");
+    }
   }
 
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  rename-machine <machineid> \"New name\"");
+    System.err.println();
+    System.err.println("Change the name of the machine with the specified ID, which");
+    System.err.println("must be an integer as returned by list-machines.");  }
 }

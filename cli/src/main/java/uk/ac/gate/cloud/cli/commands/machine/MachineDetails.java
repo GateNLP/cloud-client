@@ -25,9 +25,9 @@ import uk.ac.gate.cloud.machine.MachineState;
 
 public class MachineDetails extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: machine-details <machineid>");
+      showHelp();
       System.exit(1);
     }
     long machineId = -1;
@@ -40,7 +40,11 @@ public class MachineDetails extends AbstractCommand {
 
     MachineManager mgr = new MachineManager(client);
     Machine m = mgr.getMachine(machineId);
-    renderMachine(m);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, m);
+    } else {
+      renderMachine(m);
+    }
   }
 
   private void renderMachine(Machine m) {
@@ -55,6 +59,16 @@ public class MachineDetails extends AbstractCommand {
       System.out.println("     Public URL: " + m.publicUrl);
       System.out.println("    Launch date: " + m.launchTime);
     }
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  machine-details <machineid>");
+    System.err.println();
+    System.err.println("Display details of the machine with the specified ID, which");
+    System.err.println("must be an integer as returned by list-machines.");
   }
 
 }

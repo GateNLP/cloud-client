@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.machine.Machine;
 public class StopMachine extends MachineControlCommand {
 
   @Override
-  protected String commandName() {
-    return "stop-machine";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  stop-machine <machineid>");
+    System.err.println();
+    System.err.println("Stop the machine with the given ID.  The command will");
+    System.err.println("fail if the machine is not currently \"active\"");
   }
 
   @Override

@@ -23,9 +23,9 @@ import uk.ac.gate.cloud.machine.MachineManager;
 
 public abstract class MachineControlCommand extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: " + commandName() + " <machineid>");
+      showHelp();
       System.exit(1);
     }
     long machineId = -1;
@@ -39,9 +39,10 @@ public abstract class MachineControlCommand extends AbstractCommand {
     MachineManager mgr = new MachineManager(client);
     Machine machine = mgr.getMachine(machineId);
     controlMachine(machine);
+    if(jsonOutput) {
+      System.out.println("{\"success\":true}");
+    }
   }
 
-  protected abstract String commandName();
-  
   protected abstract void controlMachine(Machine j);
 }

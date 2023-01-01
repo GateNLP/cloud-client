@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.machine.Machine;
 public class StartMachine extends MachineControlCommand {
 
   @Override
-  protected String commandName() {
-    return "start-machine";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  start-machine <machineid>");
+    System.err.println();
+    System.err.println("Start the machine with the given ID.  The command will");
+    System.err.println("fail if the machine is not currently \"inactive\"");
   }
 
   @Override
