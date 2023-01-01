@@ -27,9 +27,10 @@ import uk.ac.gate.cloud.common.InputType;
 
 public class UploadBundle extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 3) {
-      usage();
+      showHelp();
+      System.exit(1);
     }
 
     String bundleName = args[0];
@@ -49,7 +50,8 @@ public class UploadBundle extends AbstractCommand {
           inputType = InputType.valueOf(args[++i]);
         } catch(IllegalArgumentException e) {
           System.err.println("Unrecognised input type.");
-          usage();
+          showHelp();
+          System.exit(1);
         }
       } else if("-encoding".equals(args[i])) {
         encoding = args[++i];
@@ -60,13 +62,15 @@ public class UploadBundle extends AbstractCommand {
       } else if("-mimeTypes".equals(args[i])) {
         mimeTypes = args[++i];
       } else {
-        usage();
+        showHelp();
+        System.exit(1);
       }
     }
 
     if(inputType == null) {
       System.err.println("Input type must be specified");
-      usage();
+      showHelp();
+      System.exit(1);
     }
 
     DataBundle newBundle = null;
@@ -79,18 +83,29 @@ public class UploadBundle extends AbstractCommand {
               mgr.createArchiveBundleFromUploads(bundleName, inputType,
                       encoding, mimeTypeOverride, fileExtensions);
     }
-    System.out.println("Created bundle " + newBundle.id);
+    if(!jsonOutput) {
+      System.out.println("Created bundle " + newBundle.id);
+    }
 
     for(; i < args.length; i++) {
-      System.out.println("Uploading " + args[i]);
+      if(!jsonOutput) {
+        System.out.println("Uploading " + args[i]);
+      }
       newBundle.addFile(new File(args[i]));
     }
-    System.out.println("Closing bundle...");
+    if(!jsonOutput) {
+      System.out.println("Closing bundle...");
+    }
     newBundle.close();
-    System.out.println("Bundle " + newBundle.id + " uploaded");
+    if(jsonOutput) {
+      mapper.writeValue(System.out, newBundle);
+    } else {
+      System.out.println("Bundle " + newBundle.id + " uploaded");
+    }
   }
 
-  private void usage() {
+  @Override
+  public void showHelp() throws Exception {
     System.err
             .println("Usage: upload-bundle \"bundle name\" -type <type> [options] file1 file2 ...");
     System.err.println();
@@ -124,8 +139,6 @@ public class UploadBundle extends AbstractCommand {
             .println("              of file extensions - ZIP/TAR entries that do not have");
     System.err
             .println("              one of these extensions will be ignored.");
-
-    System.exit(1);
   }
 
 }

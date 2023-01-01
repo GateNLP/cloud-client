@@ -24,9 +24,9 @@ import uk.ac.gate.cloud.data.DataManager;
 
 public class DeleteBundle extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: delete-bundle <bundleid or url>");
+      showHelp();
       System.exit(1);
     }
     DataManager mgr = new DataManager(client);
@@ -38,11 +38,26 @@ public class DeleteBundle extends AbstractCommand {
       b = mgr.getBundle(args[0]);
     }
     if(b == null) {
-      System.out
+      System.err
               .println("Please specify either a numeric bundle ID or a valid bundle URL.");
+    } else {
+      b.delete();
+      if(jsonOutput) {
+        System.out.println("{\"success\":true}");
+      } else {
+        System.out.println("Bundle " + b.id + " deleted");
+      }
     }
+  }
 
-    b.delete();
-    System.out.println("Bundle " + b.id + " deleted");
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  delete-bundle <bundleid or url>");
+    System.err.println();
+    System.err.println("Delete the data bundle with the given ID (or \"detailUrl\"");
+    System.err.println("from a previous API call).  This will delete any files stored");
+    System.err.println("by GATE Cloud for this bundle.");
   }
 }

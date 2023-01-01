@@ -16,6 +16,7 @@
  */
 package uk.ac.gate.cloud.cli.commands.data;
 
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 
@@ -27,31 +28,46 @@ import uk.ac.gate.cloud.data.DataManager;
 
 public class ListBundles extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     DataManager mgr = new DataManager(client);
     List<DataBundleSummary> bundles = mgr.listBundles();
-    if(bundles == null || bundles.isEmpty()) {
-      System.out.println("No data bundles found");
-    } else {
-      // ID (6 cols), Name (40 cols), state (rest)
-      System.out.println("    ID  Name                                      Notes");
-      System.out.println("----------------------------------------------------------");
-      Formatter f = new Formatter(System.out);
-      for(DataBundleSummary summ : bundles) {
-        String name = summ.name;
-        if(name.length() > 40) {
-          name = name.substring(0,37) + "...";
-        }
-        String notes = "";
-        if(!summ.closed) {
-          notes = "Open for uploads";
-        } else if(!summ.downloadable) {
-          notes = "Not directly downloadable";
-        }
-        f.format("%6d  %-40s  %s%n", summ.id, name, notes);
+    if(jsonOutput) {
+      if(bundles == null) {
+        bundles = Collections.emptyList();
       }
-      f.close();
+      mapper.writeValue(System.out, bundles);
+    } else {
+      if(bundles == null || bundles.isEmpty()) {
+        System.out.println("No data bundles found");
+      } else {
+        // ID (6 cols), Name (40 cols), state (rest)
+        System.out.println("    ID  Name                                      Notes");
+        System.out.println("----------------------------------------------------------");
+        Formatter f = new Formatter(System.out);
+        for(DataBundleSummary summ : bundles) {
+          String name = summ.name;
+          if(name.length() > 40) {
+            name = name.substring(0, 37) + "...";
+          }
+          String notes = "";
+          if(!summ.closed) {
+            notes = "Open for uploads";
+          } else if(!summ.downloadable) {
+            notes = "Not directly downloadable";
+          }
+          f.format("%6d  %-40s  %s%n", summ.id, name, notes);
+        }
+        f.close();
+      }
     }
   }
 
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  list-bundles");
+    System.err.println();
+    System.err.println("List all your data bundles.");
+  }
 }

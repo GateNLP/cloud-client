@@ -24,12 +24,9 @@ import uk.ac.gate.cloud.data.DataManager;
 
 public class BundleDetails extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: bundle-details <bundleid or url> [-nofiles]");
-      System.out.println();
-      System.err.println("Optional switches:");
-      System.err.println("  -nofiles : omit the full listing of files in this bundle.");
+      showHelp();
       System.exit(1);
     }
     DataManager mgr = new DataManager(client);
@@ -41,10 +38,18 @@ public class BundleDetails extends AbstractCommand {
       b = mgr.getBundle(args[0]);
     }
     if(b == null) {
-      System.out
+      System.err
               .println("Please specify either a numeric bundle ID or a valid bundle URL.");
+      return;
     }
-    renderBundle(b, args.length > 1 && "-nofiles".equals(args[1]));
+    if(jsonOutput) {
+      if("-nofiles".equals(args[1])) {
+        b.files = null;
+      }
+      mapper.writeValue(System.out, b);
+    } else {
+      renderBundle(b, args.length > 1 && "-nofiles".equals(args[1]));
+    }
   }
 
   private void renderBundle(DataBundle b, boolean noFiles) {
@@ -86,5 +91,16 @@ public class BundleDetails extends AbstractCommand {
     } else {
       System.out.println("Bundle is currently open for uploads.");
     }
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  bundle-details <bundleid or url> [-nofiles]");
+    System.err.println();
+    System.err.println("Show details of a bundle.  Optional switches:");
+    System.err.println("  -nofiles : omit the full listing of files in this bundle.");
+
   }
 }
