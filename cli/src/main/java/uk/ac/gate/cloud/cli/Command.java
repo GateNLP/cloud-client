@@ -22,4 +22,6 @@ public interface Command {
   public void run(RestClient client, String... args) throws Exception;
 
   public void run(RestClient client, boolean jsonOutput, String... args) throws Exception;
+
+  public void showHelp() throws Exception;
 }

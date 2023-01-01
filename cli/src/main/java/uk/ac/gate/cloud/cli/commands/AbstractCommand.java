@@ -19,9 +19,11 @@ package uk.ac.gate.cloud.cli.commands;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Formatter;
+import java.util.Locale;
 
 import uk.ac.gate.cloud.cli.Command;
 
+import uk.ac.gate.cloud.client.RestClient;
 import uk.ac.gate.cloud.common.Prices;
 
 public abstract class AbstractCommand implements Command {
@@ -106,5 +108,12 @@ public abstract class AbstractCommand implements Command {
   
   public String formatPercent(double val) {
     return percentFormatter.format(val);
+  }
+
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  " + this.getClass().getSimpleName().replaceAll(
+            "(?<=[a-z])([A-Z])", "-$1").toLowerCase(Locale.ENGLISH));
   }
 }

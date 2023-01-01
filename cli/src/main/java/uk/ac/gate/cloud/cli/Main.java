@@ -43,13 +43,32 @@ public class Main {
       args = Arrays.copyOfRange(args, 1, args.length);
     }
 
+    if(args.length > 0 && "configure".equals(args[0])) {
+      doConfigure();
+    }
+
     Properties commands = new Properties();
     InputStream commandsStream =
             Main.class.getResourceAsStream("commands.properties");
     commands.load(commandsStream);
     commandsStream.close();
 
-    if(args.length < 1) {
+    String command = null, commandClass = null;
+    if(args.length > 0) {
+      command = args[0];
+      String actualCommand = command;
+      commandClass = commands.getProperty(command);
+      if("help".equals(command) && args.length > 1) {
+        actualCommand = args[1];
+        commandClass = commands.getProperty(actualCommand);
+      }
+      if(commandClass == null) {
+        System.err.println("Unknown command \"" + actualCommand + "\"");
+      }
+    }
+
+    if(commandClass == null) {
+      // either no command, just "help" with no arg, or "help cmd" for invalid cmd
       System.err.println("Usage:");
       System.err.println();
       System.err.println("    java -jar gate-cloud-cli.jar [--json] <command> [options]");
@@ -65,27 +84,23 @@ public class Main {
       for(String cmd : validCommands) {
         System.err.println("  " + cmd);
       }
+      System.err.println();
+      System.err.println("For details of the parameters for a particular command, use");
+      System.err.println("\"help <command>\", or see the wiki.");
       System.exit(1);
     }
-    
-    if("configure".equals(args[0])) {
-      doConfigure();
-    }
 
-    RestClient client = createClient();
-
-    String command = args[0];
-    String commandClass = commands.getProperty(command);
-    if(commandClass == null) {
-      System.err.println("Unknown command \"" + command + "\"");
-      System.exit(1);
-    }
     Command cmd =
-            Class.forName(commands.getProperty(command))
-                    .asSubclass(Command.class).newInstance();
-    String[] cmdArgs = new String[args.length - 1];
-    System.arraycopy(args, 1, cmdArgs, 0, cmdArgs.length);
+            Class.forName(commandClass)
+                    .asSubclass(Command.class).getDeclaredConstructor().newInstance();
+    if("help".equals(command)) {
+      cmd.showHelp();
+      System.exit(0);
+    }
+
+    String[] cmdArgs = Arrays.copyOfRange(args, 1, args.length);
     try {
+      RestClient client = createClient();
       cmd.run(client, jsonOutput, cmdArgs);
     } catch(RestClientException e) {
       String response =
