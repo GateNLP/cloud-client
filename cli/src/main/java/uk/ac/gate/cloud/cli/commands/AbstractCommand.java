@@ -36,6 +36,11 @@ public abstract class AbstractCommand implements Command {
     percentFormatter.setMaximumFractionDigits(2);
   }
 
+  @Override
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
+    run(client, args);
+  }
+
   public String formatPrices(Prices p) {
     StringBuilder buf = new StringBuilder();
     if(p.setup > 0) {

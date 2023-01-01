@@ -23,10 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -40,6 +37,12 @@ public class Main {
    * @param args
    */
   public static void main(String... args) throws Exception {
+    boolean jsonOutput = false;
+    if(args.length > 0 && "--json".equals(args[0])) {
+      jsonOutput = true;
+      args = Arrays.copyOfRange(args, 1, args.length);
+    }
+
     Properties commands = new Properties();
     InputStream commandsStream =
             Main.class.getResourceAsStream("commands.properties");
@@ -47,7 +50,14 @@ public class Main {
     commandsStream.close();
 
     if(args.length < 1) {
-      System.err.println("No command name provided, valid commands are:");
+      System.err.println("Usage:");
+      System.err.println();
+      System.err.println("    java -jar gate-cloud-cli.jar [--json] <command> [options]");
+      System.err.println();
+      System.err.println("  --json - produce output as JSON instead of the default human-readable");
+      System.err.println("           tabular format");
+      System.err.println();
+      System.err.println("Valid commands are:");
       List<String> validCommands = new ArrayList<String>();
       validCommands.add("configure");
       validCommands.addAll(commands.stringPropertyNames());
@@ -76,7 +86,7 @@ public class Main {
     String[] cmdArgs = new String[args.length - 1];
     System.arraycopy(args, 1, cmdArgs, 0, cmdArgs.length);
     try {
-      cmd.run(client, cmdArgs);
+      cmd.run(client, jsonOutput, cmdArgs);
     } catch(RestClientException e) {
       String response =
               (e.getResponse() == null) ? "(no detail available)" : e
