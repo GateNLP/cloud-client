@@ -22,32 +22,78 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import uk.ac.gate.cloud.cli.commands.DownloadingCommand;
+import uk.ac.gate.cloud.client.RestClient;
 import uk.ac.gate.cloud.client.RestClientException;
 import uk.ac.gate.cloud.common.Downloadable;
 import uk.ac.gate.cloud.job.Job;
+import uk.ac.gate.cloud.job.JobManager;
 
-public class DownloadAllReports extends JobControlCommand {
-
-  @Override
-  protected String commandName() {
-    return "download-all-reports";
-  }
+public class DownloadAllReports extends DownloadingCommand {
 
   @Override
-  protected void controlJob(Job j) {
-    List<Downloadable> results = j.reports();
-    int i = 1;
-    for(Downloadable res : results) {
-      String path = res.url.getPath();
-      String filename = path.substring(path.lastIndexOf("/") + 1);
-      System.out.println(filename + " (file " + i++ + " of " + results.size() + ")");
-      File f = new File(filename);
-      try {
-        FileUtils.copyURLToFile(res.urlToDownload(), f);
-      } catch(IOException e) {
-        throw new RestClientException("Error downloading " + res.url);
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
+    if(args.length < 1) {
+      showHelp();
+      System.exit(1);
+    }
+
+    JobManager mgr = new JobManager(client);
+    Job job = null;
+    boolean overwrite = false;
+    File baseDir = null;
+    for(int j = 0; j < args.length; j++) {
+      if("-f".equals(args[j])) {
+        overwrite = true;
+      } else if("-d".equals(args[j])) {
+        j++;
+        if(j == args.length) {
+          System.err.println("-d option requires an argument");
+          showHelp();
+          System.exit(1);
+        }
+        baseDir = new File(args[j]);
+      } else {
+        long jobId = -1;
+        try {
+          jobId = Long.parseLong(args[j]);
+        } catch(NumberFormatException e) {
+          System.err.println("Job ID must be a valid number");
+          System.exit(1);
+        }
+        job = mgr.getJob(jobId);
       }
     }
+
+    if(job == null) {
+      System.err.println("No such job");
+      showHelp();
+      System.exit(1);
+    }
+
+    List<Downloaded> downloads = doDownload(job.reports(), null, baseDir, jsonOutput, overwrite);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, downloads);
+    }
   }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  download-all-reports <jobid> [-d directory] [-f]");
+    System.err.println();
+    System.err.println("Download all report and log files from a job into local files with");
+    System.err.println("the corresponding names.  To download individual files use the");
+    System.err.println("\"download\" command.");
+    System.err.println();
+    System.err.println(" <jobid> : the id of the job");
+    System.err.println(" -d directory : directory into which the files should be downloaded.");
+    System.err.println("                If omitted, default is the current directory.");
+    System.err.println(" -f : force, i.e. if there is already a file in the output directory");
+    System.err.println("      with the same name as a file to download, overwrite it.  If omitted");
+    System.err.println("      the newly downloaded file will be renamed with a numeric suffix.");
+  }
+
 
 }
