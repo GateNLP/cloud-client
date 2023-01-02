@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.job.Job;
 public class ResetJob extends JobControlCommand {
 
   @Override
-  protected String commandName() {
-    return "reset-job";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  reset-job <jobid>");
+    System.err.println();
+    System.err.println("Reset the job with the given ID so it can be run again.  The");
+    System.err.println("command will fail if the job is not currently \"COMPLETED\"");
   }
 
   @Override

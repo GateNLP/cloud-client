@@ -24,9 +24,9 @@ import uk.ac.gate.cloud.job.JobManager;
 
 public class RenameJob extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 2) {
-      System.err.println("Usage: rename-job <jobid> \"New name\"");
+      showHelp();
       System.exit(1);
     }
     long jobId = -1;
@@ -40,7 +40,20 @@ public class RenameJob extends AbstractCommand {
     JobManager mgr = new JobManager(client);
     Job j = mgr.getJob(jobId);
     j.rename(args[1]);
-    System.out.println("Job renamed successfully");
+    if(jsonOutput) {
+      mapper.writeValue(System.out, j);
+    } else {
+      System.out.println("Job renamed successfully");
+    }
   }
 
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  rename-job <jobid> \"New name\"");
+    System.err.println();
+    System.err.println("Change the name of the job with the specified ID, which");
+    System.err.println("must be an integer as returned by list-jobs.");
+  }
 }

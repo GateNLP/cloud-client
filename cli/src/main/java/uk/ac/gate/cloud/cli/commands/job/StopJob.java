@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.job.Job;
 public class StopJob extends JobControlCommand {
 
   @Override
-  protected String commandName() {
-    return "stop-job";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  stop-job <jobid>");
+    System.err.println();
+    System.err.println("Ask the job with the given ID to stop.  The command will");
+    System.err.println("fail if the job is not currently \"ACTIVE\"");
   }
 
   @Override

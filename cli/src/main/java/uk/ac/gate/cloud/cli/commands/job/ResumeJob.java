@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.job.Job;
 public class ResumeJob extends JobControlCommand {
 
   @Override
-  protected String commandName() {
-    return "resume-job";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  resume-job <jobid>");
+    System.err.println();
+    System.err.println("Resume the job with the given ID.  The command will");
+    System.err.println("fail if the job is not currently \"SUSPENDED\"");
   }
 
   @Override

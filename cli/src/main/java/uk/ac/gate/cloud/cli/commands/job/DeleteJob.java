@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.job.Job;
 public class DeleteJob extends JobControlCommand {
 
   @Override
-  protected String commandName() {
-    return "delete-job";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  delete-job <jobid>");
+    System.err.println();
+    System.err.println("Delete the job with the given ID.  The command will");
+    System.err.println("fail if the job is currently \"ACTIVE\"");
   }
 
   @Override

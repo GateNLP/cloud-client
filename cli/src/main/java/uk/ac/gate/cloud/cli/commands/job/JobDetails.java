@@ -25,9 +25,9 @@ import uk.ac.gate.cloud.job.JobState;
 
 public class JobDetails extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: job-details <jobid>");
+      showHelp();
       System.exit(1);
     }
     long jobId = -1;
@@ -40,7 +40,11 @@ public class JobDetails extends AbstractCommand {
 
     JobManager mgr = new JobManager(client);
     Job j = mgr.getJob(jobId);
-    renderJob(j);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, j);
+    } else {
+      renderJob(j);
+    }
   }
 
   private void renderJob(Job j) {
@@ -68,6 +72,16 @@ public class JobDetails extends AbstractCommand {
       System.out.println("   Job progress: " + formatPercent(j.progress));
     }
 
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  job-details <jobid>");
+    System.err.println();
+    System.err.println("Display details of the job with the specified ID, which");
+    System.err.println("must be an integer as returned by list-jobs.");
   }
 
 }

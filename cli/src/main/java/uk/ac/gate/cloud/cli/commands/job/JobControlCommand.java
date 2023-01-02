@@ -24,9 +24,9 @@ import uk.ac.gate.cloud.job.JobManager;
 
 public abstract class JobControlCommand extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: " + commandName() + " <jobid>");
+      showHelp();
       System.exit(1);
     }
     long jobId = -1;
@@ -40,9 +40,10 @@ public abstract class JobControlCommand extends AbstractCommand {
     JobManager mgr = new JobManager(client);
     Job job = mgr.getJob(jobId);
     controlJob(job);
+    if(jsonOutput) {
+      System.out.println("{\"success\":true}");
+    }
   }
 
-  protected abstract String commandName();
-  
   protected abstract void controlJob(Job j);
 }

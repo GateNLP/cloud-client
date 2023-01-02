@@ -21,8 +21,13 @@ import uk.ac.gate.cloud.job.Job;
 public class StartJob extends JobControlCommand {
 
   @Override
-  protected String commandName() {
-    return "start-job";
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  start-job <jobid>");
+    System.err.println();
+    System.err.println("Start the job with the given ID.  The command will");
+    System.err.println("fail if the job is not currently \"READY\"");
   }
 
   @Override
