@@ -39,7 +39,9 @@ public abstract class AbstractCommand implements Command {
     currencyFormatter.setCurrency(Currency.getInstance("GBP"));
     percentFormatter = NumberFormat.getPercentInstance();
     percentFormatter.setMaximumFractionDigits(2);
-    mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    mapper = new ObjectMapper()
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
 
   @Override

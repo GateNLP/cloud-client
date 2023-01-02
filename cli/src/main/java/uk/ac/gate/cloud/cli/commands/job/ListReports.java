@@ -16,28 +16,55 @@
  */
 package uk.ac.gate.cloud.cli.commands.job;
 
+import java.util.Collections;
 import java.util.List;
 
+import uk.ac.gate.cloud.cli.commands.AbstractCommand;
+import uk.ac.gate.cloud.client.RestClient;
 import uk.ac.gate.cloud.common.Downloadable;
 import uk.ac.gate.cloud.job.Job;
+import uk.ac.gate.cloud.job.JobManager;
 
-public class ListReports extends JobControlCommand {
+public class ListReports extends AbstractCommand {
 
-  @Override
-  protected String commandName() {
-    return "list-results";
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
+    if(args.length < 1) {
+      showHelp();
+      System.exit(1);
+    }
+    long jobId = -1;
+    try {
+      jobId = Long.parseLong(args[0]);
+    } catch(NumberFormatException e) {
+      System.err.println("Job ID must be a valid number");
+      System.exit(1);
+    }
+
+    JobManager mgr = new JobManager(client);
+    Job job = mgr.getJob(jobId);
+    List<Downloadable> results = job.reports();
+    if(jsonOutput) {
+      if(results == null) {
+        results = Collections.emptyList();
+      }
+      mapper.writeValue(System.out, results);
+    } else {
+      if(results == null || results.isEmpty()) {
+        System.err.println("No reports found");
+      }
+      for(Downloadable res : results) {
+        System.out.println(res.url);
+      }
+    }
   }
 
   @Override
-  protected void controlJob(Job j) {
-    List<Downloadable> results = j.reports();
-    if(results == null | results.isEmpty()) {
-      System.err.println("No reports found");
-      System.exit(1);
-    }
-    for(Downloadable res : results) {
-      System.out.println(res.url);
-    }
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  list-reports <jobid>");
+    System.err.println();
+    System.err.println("List the available report and log files for the given job.");
   }
 
 }
