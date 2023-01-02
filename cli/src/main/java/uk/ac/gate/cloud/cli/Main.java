@@ -61,6 +61,15 @@ public class Main {
       if("help".equals(command) && args.length > 1) {
         actualCommand = args[1];
         commandClass = commands.getProperty(actualCommand);
+        if("configure".equals(actualCommand)) {
+          System.err.println("Usage:");
+          System.err.println();
+          System.err.println("  configure");
+          System.err.println();
+          System.err.println("Interactively configure this tool with your GATE Cloud API");
+          System.err.println("credentials.");
+          System.exit(0);
+        }
       }
       if(commandClass == null) {
         System.err.println("Unknown command \"" + actualCommand + "\"");
