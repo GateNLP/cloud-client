@@ -24,11 +24,14 @@ import uk.ac.gate.cloud.job.JobManager;
 import uk.ac.gate.cloud.job.Output;
 import uk.ac.gate.cloud.job.OutputType;
 
+import java.util.Locale;
+
 public class AddFileOutput extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 3) {
-      usage();
+      showHelp();
+      System.exit(1);
     }
     long jobId = -1;
     try {
@@ -49,39 +52,51 @@ public class AddFileOutput extends AbstractCommand {
     for(i = 1; i+1 < args.length && args[i].startsWith("-"); i++) {
       if("-type".equals(args[i])) {
         try {
-          outputType = OutputType.valueOf(args[++i]);
+          outputType = OutputType.valueOf(args[++i].toUpperCase(Locale.ENGLISH));
         } catch(IllegalArgumentException e) {
           System.err.println("Unrecognised output type.");
-          usage();
+          showHelp();
+          System.exit(1);
         }
         if(outputType == OutputType.MIMIR) {
           System.err.println("Use add-mimir-output for Mimir outputs");
-          usage();
+          showHelp();
+          System.exit(1);
         }
       } else if("-extension".equals(args[i])) {
         fileExtension = args[++i];
       } else if("-annotationSelectors".equals(args[i])) {
         annotationSelectors = args[++i];
       } else {
-        usage();
+        showHelp();
+        System.exit(1);
       }
     }
     
     if(outputType == null) {
       System.err.println("Output type must be specified");
-      usage();
+      showHelp();
+      System.exit(1);
     }
     if(fileExtension == null) {
       System.err.println("File extension must be specified");
-      usage();
+      showHelp();
+      System.exit(1);
     }
 
     Output output = job.addFileOutput(outputType, fileExtension, annotationSelectors);
-    System.out.println("Created output " + output.url);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, output);
+    } else {
+      System.out.println("Created output " + output.url);
+    }
   }
 
-  private void usage() {
-    System.err.println("Usage: add-file-output <jobid> -type <type> [options]");
+  @Override
+  public void showHelp() {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  add-file-output <jobid> -type <type> [options]");
     System.err.println();
     System.err.println("Required switches:");
     System.err.println("  -type <type> : the type of the output definition, must be one of");
@@ -96,8 +111,6 @@ public class AddFileOutput extends AbstractCommand {
     System.err.println("              type means all annotations from that set (so \":\" on its");
     System.err.println("              own means all annotation from the default set).");
     System.err.println("              If omitted the pipeline's default selectors will be used.");
-    
-    System.exit(1);
   }
 
 }

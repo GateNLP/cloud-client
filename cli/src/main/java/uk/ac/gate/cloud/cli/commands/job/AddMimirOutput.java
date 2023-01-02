@@ -25,9 +25,10 @@ import uk.ac.gate.cloud.job.Output;
 
 public class AddMimirOutput extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 3) {
-      usage();
+      showHelp();
+      System.exit(1);
     }
     long jobId = -1;
     try {
@@ -53,21 +54,30 @@ public class AddMimirOutput extends AbstractCommand {
       } else if("-password".equals(args[i])) {
         password = args[++i];
       } else {
-        usage();
+        showHelp();
+        System.exit(1);
       }
     }
     
     if(indexUrl == null) {
       System.err.println("Index URL must be specified");
-      usage();
+      showHelp();
+      System.exit(1);
     }
 
     Output output = job.addMimirOutput(indexUrl, username, password);
-    System.out.println("Created output " + output.url);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, output);
+    } else {
+      System.out.println("Created output " + output.url);
+    }
   }
 
-  private void usage() {
-    System.err.println("Usage: add-mimir-output <jobid> -indexUrl <url> [options]");
+  @Override
+  public void showHelp() {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  add-mimir-output <jobid> -indexUrl <url> [options]");
     System.err.println();
     System.err.println("Required switches:");
     System.err.println("  -indexUrl <url> : the URL of the target Mimir index.");
@@ -76,8 +86,6 @@ public class AddMimirOutput extends AbstractCommand {
     System.err.println("              server.  If omitted, requests are not authenticated.");
     System.err.println("  -password : Password to use when communicating with the Mimir");
     System.err.println("              server.  If omitted, requests are not authenticated.");
-    
-    System.exit(1);
   }
 
 }

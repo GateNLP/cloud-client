@@ -16,6 +16,7 @@
  */
 package uk.ac.gate.cloud.cli.commands.job;
 
+import java.util.Collections;
 import java.util.List;
 
 import uk.ac.gate.cloud.cli.commands.AbstractCommand;
@@ -28,9 +29,9 @@ import uk.ac.gate.cloud.job.OutputType;
 
 public class ListOutputs extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: list-inputs <jobid>");
+      showHelp();
       System.exit(1);
     }
     long jobId = -1;
@@ -44,25 +45,41 @@ public class ListOutputs extends AbstractCommand {
     JobManager mgr = new JobManager(client);
     Job j = mgr.getJob(jobId);
     List<Output> outputs = j.listOutputs();
-    if(outputs == null || outputs.isEmpty()) {
-      System.out.println("No outputs found");
+    if(jsonOutput) {
+      if(outputs == null) {
+        outputs = Collections.emptyList();
+      }
+      mapper.writeValue(System.out, outputs);
     } else {
-      System.out.println(outputs.size() + " output(s) found");
-      for(Output o : outputs) {
-        System.out.println();
-        System.out.println("          Detail URL: " + o.url);
-        System.out.println("                Type: " + o.type);
-        if(o.type == OutputType.MIMIR) {
-          System.out.println("           Index URL: " + o.indexUrl);
-          if(o.username != null) {
-            System.out.println("            Username: " + o.username);
+      if(outputs == null || outputs.isEmpty()) {
+        System.out.println("No outputs found");
+      } else {
+        System.out.println(outputs.size() + " output(s) found");
+        for(Output o : outputs) {
+          System.out.println();
+          System.out.println("          Detail URL: " + o.url);
+          System.out.println("                Type: " + o.type);
+          if(o.type == OutputType.MIMIR) {
+            System.out.println("           Index URL: " + o.indexUrl);
+            if(o.username != null) {
+              System.out.println("            Username: " + o.username);
+            }
+          } else {
+            System.out.println("      File extension: " + o.fileExtension);
+            System.out.println("Annotation selectors: " + o.annotationSelectors);
           }
-        } else {
-          System.out.println("      File extension: " + o.fileExtension);
-          System.out.println("Annotation selectors: " + o.annotationSelectors);
         }
       }
     }
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  list-outputs <jobid>");
+    System.err.println();
+    System.err.println("List the output specifications for the job with the given ID.");
   }
 
 }

@@ -24,16 +24,30 @@ import uk.ac.gate.cloud.job.Output;
 
 public class DeleteOutput extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: delete-output <outputurl>");
+      showHelp();
       System.exit(1);
     }
 
     JobManager mgr = new JobManager(client);
     Output output = mgr.getOutputDetails(args[0]);
     output.delete();
-    System.out.println("Output deleted successfully");
+    if(jsonOutput) {
+      System.out.println("{\"success\":true}");
+    } else {
+      System.out.println("Output deleted successfully");
+    }
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  delete-output <outputurl>");
+    System.err.println();
+    System.err.println("Delete the given output from its job.  The outputurl should be");
+    System.err.println("a \"detail URL\" returned from list-outputs.");
   }
 
 }
