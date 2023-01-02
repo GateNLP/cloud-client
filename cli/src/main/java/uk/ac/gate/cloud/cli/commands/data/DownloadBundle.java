@@ -17,16 +17,10 @@
 package uk.ac.gate.cloud.cli.commands.data;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
-import org.apache.commons.io.FileUtils;
-
-import uk.ac.gate.cloud.cli.commands.AbstractCommand;
 import uk.ac.gate.cloud.cli.commands.DownloadingCommand;
 import uk.ac.gate.cloud.client.RestClient;
-import uk.ac.gate.cloud.client.RestClientException;
-import uk.ac.gate.cloud.common.Downloadable;
 import uk.ac.gate.cloud.data.DataBundle;
 import uk.ac.gate.cloud.data.DataManager;
 

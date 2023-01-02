@@ -17,17 +17,12 @@
 package uk.ac.gate.cloud.cli.commands.job;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
-import uk.ac.gate.cloud.cli.commands.AbstractCommand;
 import uk.ac.gate.cloud.cli.commands.DownloadingCommand;
 import uk.ac.gate.cloud.client.RestClient;
-import uk.ac.gate.cloud.client.RestClientException;
 import uk.ac.gate.cloud.common.Downloadable;
 
 public class Download extends DownloadingCommand {

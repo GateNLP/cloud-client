@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.SerializedString;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import uk.ac.gate.cloud.cli.commands.AbstractCommand;
