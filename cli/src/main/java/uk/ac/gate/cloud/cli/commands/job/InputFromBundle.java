@@ -26,9 +26,9 @@ import uk.ac.gate.cloud.job.JobManager;
 public class InputFromBundle extends AbstractCommand {
 
   @Override
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 2) {
-      System.err.println("Usage: input-from-bundle <jobid> <bundleId>");
+      showHelp();
       System.exit(1);
     }
     
@@ -48,12 +48,28 @@ public class InputFromBundle extends AbstractCommand {
       System.exit(1);
     }
     
-    System.out.println("Configuring job " + jobId + " to take input from bundle " + bundleId);
+    if(!jsonOutput) {
+      System.out.println("Configuring job " + jobId + " to take input from bundle " + bundleId);
+    }
 
     JobManager mgr = new JobManager(client);
     Job job = mgr.getJob(jobId);
     InputDetails input = job.addBundleInput(bundleId);
-    System.out.println("Created " + input.url);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, input);
+    } else {
+      System.out.println("Created " + input.url);
+    }
   }
 
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  input-from-bundle <jobid> <bundleId>");
+    System.err.println();
+    System.err.println("Configure a job to take input from a data bundle.");
+    System.err.println(" - jobid : numeric ID of the job");
+    System.err.println(" - bundleId : numeric ID of the data bundle");
+  }
 }

@@ -16,6 +16,7 @@
  */
 package uk.ac.gate.cloud.cli.commands.job;
 
+import java.util.Collections;
 import java.util.List;
 
 import uk.ac.gate.cloud.cli.commands.AbstractCommand;
@@ -27,9 +28,9 @@ import uk.ac.gate.cloud.job.JobManager;
 
 public class ListInputs extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: list-inputs <jobid>");
+      showHelp();
       System.exit(1);
     }
     long jobId = -1;
@@ -43,16 +44,32 @@ public class ListInputs extends AbstractCommand {
     JobManager mgr = new JobManager(client);
     Job j = mgr.getJob(jobId);
     List<InputSummary> inputs = j.listInputs();
-    if(inputs == null || inputs.isEmpty()) {
-      System.out.println("No inputs found");
+    if(jsonOutput) {
+      if(inputs == null) {
+        inputs = Collections.emptyList();
+      }
+      mapper.writeValue(System.out, inputs);
     } else {
-      System.out.println(inputs.size() + " input(s) found");
-      for(InputSummary i : inputs) {
-        System.out.println();
-        System.out.println("Detail URL: " + i.url);
-        System.out.println("      Type: " + (i.type == null ? "CommonCrawl search" : i.type));
+      if(inputs == null || inputs.isEmpty()) {
+        System.out.println("No inputs found");
+      } else {
+        System.out.println(inputs.size() + " input(s) found");
+        for(InputSummary i : inputs) {
+          System.out.println();
+          System.out.println("Detail URL: " + i.url);
+          System.out.println("      Type: " + (i.type == null ? "CommonCrawl search" : i.type));
+        }
       }
     }
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  list-inputs <jobid>");
+    System.err.println();
+    System.err.println("List the input specifications for the job with the given ID.");
   }
 
 }

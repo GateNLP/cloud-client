@@ -24,15 +24,19 @@ import uk.ac.gate.cloud.job.JobManager;
 
 public class GetInputDetails extends AbstractCommand {
 
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
-      System.err.println("Usage: input-details <inputurl>");
+      showHelp();
       System.exit(1);
     }
 
     JobManager mgr = new JobManager(client);
     InputDetails input = mgr.getInputDetails(args[0]);
-    renderInput(input);
+    if(jsonOutput) {
+      mapper.writeValue(System.out, input);
+    } else {
+      renderInput(input);
+    }
   }
 
   private void renderInput(InputDetails input) {
@@ -58,6 +62,16 @@ public class GetInputDetails extends AbstractCommand {
     if(input.mimeTypes != null) {
       System.out.println(" MIME type filters: " + input.mimeTypes);
     }
+  }
+
+  @Override
+  public void showHelp() throws Exception {
+    System.err.println("Usage:");
+    System.err.println();
+    System.err.println("  input-details <inputurl>");
+    System.err.println();
+    System.err.println("Describe the given input specification.  The inputurl should be");
+    System.err.println("a \"detail URL\" returned from list-inputs for one of your jobs.");
   }
 
 }
