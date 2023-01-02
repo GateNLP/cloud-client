@@ -35,7 +35,7 @@ import uk.ac.gate.cloud.online.ResponseType;
 public class ProcessDocument extends AbstractCommand {
 
   @Override
-  public void run(RestClient client, String... args) throws Exception {
+  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
     if(args.length < 1) {
       showHelp();
       System.exit(1);
