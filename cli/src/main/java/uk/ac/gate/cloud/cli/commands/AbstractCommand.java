@@ -44,16 +44,6 @@ public abstract class AbstractCommand implements Command {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
 
-  @Override
-  public void run(RestClient client, boolean jsonOutput, String... args) throws Exception {
-    run(client, args);
-  }
-
-  @Override
-  public void run(RestClient client, String... args) throws Exception {
-    throw new UnsupportedOperationException();
-  }
-
   public String formatPrices(Prices p) {
     StringBuilder buf = new StringBuilder();
     if(p.setup > 0) {
@@ -119,12 +109,5 @@ public abstract class AbstractCommand implements Command {
   
   public String formatPercent(double val) {
     return percentFormatter.format(val);
-  }
-
-  public void showHelp() throws Exception {
-    System.err.println("Usage:");
-    System.err.println();
-    System.err.println("  " + this.getClass().getSimpleName().replaceAll(
-            "(?<=[a-z])([A-Z])", "-$1").toLowerCase(Locale.ENGLISH));
   }
 }

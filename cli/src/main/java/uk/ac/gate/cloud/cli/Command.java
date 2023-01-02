@@ -19,8 +19,6 @@ package uk.ac.gate.cloud.cli;
 import uk.ac.gate.cloud.client.RestClient;
 
 public interface Command {
-  public void run(RestClient client, String... args) throws Exception;
-
   public void run(RestClient client, boolean jsonOutput, String... args) throws Exception;
 
   public void showHelp() throws Exception;
