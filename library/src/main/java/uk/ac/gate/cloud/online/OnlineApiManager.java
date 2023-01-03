@@ -2,6 +2,11 @@ package uk.ac.gate.cloud.online;
 
 import uk.ac.gate.cloud.client.RestClient;
 
+/**
+ * Main entry point for the online processing API.
+ *
+ * @author Ian Roberts
+ */
 public class OnlineApiManager {
   private RestClient client;
 

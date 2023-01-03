@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * Main entry point to the "shop" API to browse the available pipelines
- * and servrs or request a specific item by ID.
+ * and servers or request a specific item by ID.
  * 
  * @author Ian Roberts
  */

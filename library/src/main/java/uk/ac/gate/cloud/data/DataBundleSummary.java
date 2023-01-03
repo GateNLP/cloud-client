@@ -19,6 +19,11 @@ package uk.ac.gate.cloud.data;
 import uk.ac.gate.cloud.common.ApiObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+/**
+ * Summary information about a single data bundle.
+ *
+ * @author Ian Roberts
+ */
 public class DataBundleSummary extends ApiObject {
 
   /**

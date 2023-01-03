@@ -20,6 +20,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import uk.ac.gate.cloud.common.ApiObject;
 import uk.ac.gate.cloud.data.DataBundle;
 
+/**
+ * Summary information about a single cloud machine.
+ *
+ * @author Ian Roberts
+ */
 public class MachineSummary extends ApiObject {
   /**
    * The machine's numeric identifier.

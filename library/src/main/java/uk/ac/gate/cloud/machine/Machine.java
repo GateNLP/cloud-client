@@ -24,6 +24,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.net.URL;
 import java.util.Calendar;
 
+/**
+ * Full details about a cloud machine, and methods to modify and
+ * control the machine.
+ */
 public class Machine extends MachineSummary {
 
   /**
@@ -78,7 +82,7 @@ public class Machine extends MachineSummary {
 
   /**
    * Refresh this machine's data from the server to update things like the
-   * {@link #state}.
+   * {@link #state state}.
    */
   public void refresh() {
     client.getForUpdate(url, this);
